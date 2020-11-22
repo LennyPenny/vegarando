@@ -17,6 +17,14 @@ jobs:
           files: src/
           recursive: true
           dest: vegarando.zip
+      - name: Upload & release
+        uses: mnao305/chrome-extension-upload@1.1.1
+        with:
+          file-path: vegarando.zip
+          extension-id: pbcekclobcikjpjfppoodgjbiieckeik
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
