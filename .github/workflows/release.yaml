@@ -17,7 +17,8 @@ jobs:
           files: src/
           recursive: true
           dest: vegarando.zip
-      - name: Upload & release
+
+      - name: "Chrome: Upload & release"
         uses: mnao305/chrome-extension-upload@1.1.1
         continue-on-error: true
         with:
@@ -26,13 +27,14 @@ jobs:
           client-id: ${{ secrets.CHROME_CLIENT_ID }}
           client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
           refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
-      - name: "web-ext build"
+      - name: "Firefox: web-ext build"
         id: web-ext-build
         uses: kewisch/action-web-ext@v1
         with:
           cmd: build
           source: src
-      - name: "web-ext sign"
+
+      - name: "Firefox: web-ext sign"
         id: web-ext-sign
         uses: kewisch/action-web-ext@v1
         with:
@@ -42,6 +44,7 @@ jobs:
           apiKey: ${{ secrets.AMO_SIGN_KEY }}
           apiSecret: ${{ secrets.AMO_SIGN_SECRET }}
           timeout: 900000
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -54,6 +57,7 @@ jobs:
             Download the new Vegarando WebExtension zip below!
           draft: false
           prerelease: false
+
       - name: Upload Release Asset
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
