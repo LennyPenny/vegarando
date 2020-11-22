@@ -14,5 +14,10 @@
       "matches": ["*://*.lieferando.de/*"],
       "js": ["vegarando.js"]
     }
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{58439edf-6dc5-497d-a5c9-e6a9e5c4440b}"
+    }
+  }
 }
