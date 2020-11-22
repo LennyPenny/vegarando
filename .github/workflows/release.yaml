@@ -26,7 +26,7 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           body: |
-            Download the new Vegarando WenExtension zip below!
+            Download the new Vegarando WebExtension zip below!
           draft: false
           prerelease: false
       - name: Upload Release Asset
