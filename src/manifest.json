@@ -2,7 +2,7 @@
 
   "manifest_version": 2,
   "name": "Vegarando",
-  "version": "1.0",
+  "version": "1.0.5",
   "description": "Macht lieferando.de besser für Vegetarier und Veganer.",
   "icons": {
     "48": "icon-48.png",
