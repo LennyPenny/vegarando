@@ -19,6 +19,7 @@ jobs:
           dest: vegarando.zip
       - name: Upload & release
         uses: mnao305/chrome-extension-upload@1.1.1
+        continue-on-error: true
         with:
           file-path: vegarando.zip
           extension-id: pbcekclobcikjpjfppoodgjbiieckeik
