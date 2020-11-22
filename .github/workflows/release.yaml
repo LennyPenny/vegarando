@@ -15,7 +15,7 @@ jobs:
       - uses: papeloto/action-zip@v1
         with:
           files: src/
-          recursive: false
+          recursive: true
           dest: vegarando.zip
       - name: Create Release
         id: create_release
