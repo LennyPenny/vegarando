@@ -19,15 +19,17 @@ jobs:
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
       - name: Sanitize tag output
-        run: |
-          tag=$(echo ${{steps.vars.outputs.tag}} | cut -dv -f2)
-          echo "::set-output name=tag::$tag"
+        uses: bhowell2/github-substring-action@v1.0.0
+        id: tag
+        with:
+          value: "{{ steps.vars.outputs.tag }}"
+          index_of_str: "v"
 
       - name: Bump manifest version
         uses: jacobtomlinson/gha-find-replace@0.1.2
         with:
           find: "\"version\": \".*\","
-          replace: "\"version\": \"${{ steps.vars.outputs.tag }}\","
+          replace: "\"version\": \"${{ steps.tag.outputs.substring }}\","
           include: "src/manifest.json" # Do not modify Python files
 
       - uses: stefanzweifel/git-auto-commit-action@v4
