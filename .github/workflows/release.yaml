@@ -22,7 +22,7 @@ jobs:
         uses: bhowell2/github-substring-action@v1.0.0
         id: tag
         with:
-          value: "{{ steps.vars.outputs.tag }}"
+          value: "${{ steps.vars.outputs.tag }}"
           index_of_str: "v"
 
       - name: Bump manifest version
