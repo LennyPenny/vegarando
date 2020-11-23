@@ -48,7 +48,7 @@ function tagMeals() {
         let mealInfo = c.getElementsByClassName("meal__description-additional-info")[0];
         
         if (good.test(mealName.innerText) || vegan.test(mealName.innerText)) {
-            c.style.backgroundColor = "green";
+            c.classList.add("is-vegetarian");
             continue;
         }
 
