@@ -19,7 +19,8 @@ jobs:
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
-      - id: Sanitize tag output
+      - name: Sanitize tag output
+        id: vars
         run: |
           tag=$(echo ${{steps.vars.outputs.tag}} | cut -dv -f2)
           echo "::set-output name=tag::$tag"
