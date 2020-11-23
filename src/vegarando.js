@@ -25,6 +25,18 @@ function hasVeggieOption(elem) {
     return false;
 }
 
+function prepareStyle() {
+    const styleTag = document.createElement("style");
+
+    styleTag.innerText = `
+     .is-vegetarian {
+        background-color: green;
+     }
+    `;
+
+    document.head.appendChild(styleTag);
+}
+
 function tagMeals() {
     for (let c of document.getElementsByClassName("meal-container")) {
         let mealName = c.getElementsByClassName("meal-name")[0]
@@ -44,12 +56,13 @@ function tagMeals() {
             continue;
         }
 
-        c.style.backgroundColor = "green";
+        c.classList.add("is-vegetarian");
     }
 }
 
 // firefox at least silently failed on addon errors, so we have to explicitly catch q.q
 try {
+    prepareStyle();
     tagMeals();
 } catch (error) {
     console.error(error)
