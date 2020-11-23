@@ -18,6 +18,17 @@ jobs:
           recursive: true
           dest: vegarando.zip
 
+      - name: Set tag output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+      - name: Bump manifest version
+        uses: jacobtomlinson/gha-find-replace@0.1.2
+        with:
+          find: "\"version\": \".*\","
+          replace: "\"version\": \"${{ steps.vars.outputs.tag }}\","
+          include: "src/manifest.json" # Do not modify Python files
+
       - name: "Chrome: Upload & release"
         uses: mnao305/chrome-extension-upload@1.1.1
         continue-on-error: true
