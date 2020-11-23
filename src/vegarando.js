@@ -29,8 +29,13 @@ function prepareStyle() {
     const styleTag = document.createElement("style");
 
     styleTag.innerText = `
-     .is-vegetarian {
-        background-color: green;
+     .is-vegetarian .meal {
+        box-shadow: inset 0.5rem 0px 0px 0px #7bc043;
+        transition: all 0.5s;
+     }
+     .is-vegetarian .meal:hover {
+        box-shadow: inset 2rem 0px 0px 0px #7bc043;
+        padding-left: 2rem;
      }
     `;
 
