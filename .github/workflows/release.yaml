@@ -24,6 +24,8 @@ jobs:
           replace: "\"version\": \"${{ steps.vars.outputs.tag }}\","
           include: "src/manifest.json" # Do not modify Python files
 
+      - uses: stefanzweifel/git-auto-commit-action@v4
+
       - uses: papeloto/action-zip@v1
         with:
           files: src/
