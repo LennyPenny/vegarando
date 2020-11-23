@@ -12,11 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - uses: papeloto/action-zip@v1
-        with:
-          files: src/
-          recursive: true
-          dest: vegarando.zip
 
       - name: Set tag output
         id: vars
@@ -28,6 +23,12 @@ jobs:
           find: "\"version\": \".*\","
           replace: "\"version\": \"${{ steps.vars.outputs.tag }}\","
           include: "src/manifest.json" # Do not modify Python files
+
+      - uses: papeloto/action-zip@v1
+        with:
+          files: src/
+          recursive: true
+          dest: vegarando.zip
 
       - name: "Chrome: Upload & release"
         uses: mnao305/chrome-extension-upload@1.1.1
