@@ -16,6 +16,7 @@ jobs:
           ref: main
 
       - name: Set tag output
+        id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
       - name: Sanitize tag output
