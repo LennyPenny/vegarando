@@ -1,5 +1,5 @@
 # Vegarando
-Browsererweitung um lieferando mehr einfach für vegetarier und veganer zu machen (mit unrelatierten bonusfeatures [soon])
+Browsererweitung um lieferando mehr einfach für Vegetarier:innen und Veganer:innen zu machen (mit unrelatierten bonusfeatures [soon])
 
 ![image](https://user-images.githubusercontent.com/4027243/100141445-bd3e1f00-2e92-11eb-99ab-895fce2a4115.png)
 
