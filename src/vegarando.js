@@ -53,17 +53,33 @@ function tagMeals() {
         }
 
         if (bad.test(mealName.innerText) || (mealInfo && bad.test(mealInfo.innerText))) {
+            c.classList.add("is-meaty");
             continue;
         }
 
         let mealOptions = c.getElementsByClassName("meal__description-choose-from")[0];
         if (mealOptions && !hasVeggieOption(mealOptions)) {
+            c.classList.add("is-meaty");
             continue;
         }
 
         c.classList.add("is-vegetarian");
     }
 }
+
+function toggleMeaty(show) {
+    for (let c of document.getElementsByClassName("is-meaty")) {
+        c.style.display = show && "none" || "block";
+    }
+}
+
+browser.storage.onChanged.addListener(async (changes, area) => {
+    if (area != "sync") {
+        return;
+    }
+
+    toggleMeaty(changes["hideMeaty"].newValue);
+});
 
 // firefox at least silently failed on addon errors, so we have to explicitly catch q.q
 try {

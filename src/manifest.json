@@ -16,6 +16,12 @@
       "js": ["vegarando.js"]
     }
   ],
+  "page_action": {
+    "default_icon": "icon-48.png",
+    "default_title": "Vegarando",
+    "default_popup": "popup/vegarando.html",
+    "show_matches": ["*://*.lieferando.de/*"]
+  },
   "browser_specific_settings": {
     "gecko": {
       "id": "{58439edf-6dc5-497d-a5c9-e6a9e5c4440b}"
