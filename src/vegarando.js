@@ -67,6 +67,23 @@ function tagMeals() {
     }
 }
 
+function tagCategories() {
+    for (let category of document.getElementsByClassName("menucard__meals-group")) {
+        let onlyMeatyMeals = true;
+        for (let meal of category.getElementsByClassName("meal-container")) {
+            if (meal.classList.contains("is-vegetarian")) {
+                onlyMeatyMeals = false;
+            }
+        }
+
+        if (onlyMeatyMeals == false) {
+            continue;
+        }
+
+        category.classList.add("is-meaty");
+    }
+}
+
 function toggleMeaty(show) {
     for (let c of document.getElementsByClassName("is-meaty")) {
         c.style.display = show && "none" || "block";
@@ -85,6 +102,7 @@ browser.storage.onChanged.addListener(async (changes, area) => {
 try {
     prepareStyle();
     tagMeals();
+    tagCategories();
 } catch (error) {
     console.error(error)
 }
