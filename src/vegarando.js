@@ -98,11 +98,17 @@ browser.storage.onChanged.addListener(async (changes, area) => {
     toggleMeaty(changes["hideMeaty"].newValue);
 });
 
+async function initialHide() {
+    toggleMeaty((await browser.storage.sync.get())["hideMeaty"]);
+}
+
 // firefox at least silently failed on addon errors, so we have to explicitly catch q.q
 try {
     prepareStyle();
     tagMeals();
     tagCategories();
+
+    initialHide();
 } catch (error) {
     console.error(error)
 }
