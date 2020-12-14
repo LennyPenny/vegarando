@@ -9,6 +9,7 @@
     "64": "icon-64.png",
     "96": "icon-64.png"
   },
+  "permissions": ["storage"],
   "content_scripts": [
     {
       "matches": ["*://*.lieferando.de/*"],
