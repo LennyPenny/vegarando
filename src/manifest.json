@@ -13,7 +13,10 @@
   "content_scripts": [
     {
       "matches": ["*://*.lieferando.de/*"],
-      "js": ["vegarando.js"]
+      "js": [
+        "deps/browser-polyfill.min.js",
+        "vegarando.js"
+      ]
     }
   ],
   "page_action": {
