@@ -1,14 +1,37 @@
-"use strict"
+"use strict";
 
+const bad = /aal|salami|bacon|sucuk|schinken|chicken|ente|bulette|fisch|garnele|meeresfr|leber|kalb|schwein|lachs|pastete|lamm|prosciutto|kapern|sardellen|gyros|Hähnchen|Hänchen|hühner|hühn|hünchen|huhn|Scampi|wurst|rind|beef|fleisch|krabben|hackfleisch|wurst|würstchen|schnitzel|steak|turkey|kebab|kebap|pute|speck|shrimps|scmpi|bolognese|ribs|rippchen|rogan josh|goshet|murgh|döner|frutti di mare|prosciutto|gehacktes|gehacktem|wiener art|burger|ebi|kani|surimi|sake|unagi|tako|masago|saba|tekka|maguro|mongoika/gim;
+const good = /vegetarisch|vegan|veggie|vegetaria|chay/gim; // chay is vietnamese for vegetarian
+const vegan = /vegan/gim;
 
-const bad = /aal|salami|bacon|sucuk|schinken|chicken|ente|bulette|fisch|garnele|meeresfr|leber|kalb|schwein|lachs|pastete|lamm|prosciutto|sardellen|gyros|Hähnchen|Hänchen|hühner|hühn|hünchen|huhn|Scampi|wurst|rind|beef|fleisch|krabben|hackfleisch|wurst|würstchen|schnitzel|steak|turkey|kebab|kebap|pute|speck|shrimps|scmpi|bolognese|ribs|rippchen|rogan josh|goshet|murgh|döner|frutti di mare|prosciutto|gehacktes|gehacktem|wiener art|burger|ebi|kani|surimi|sake|unagi|tako|masago|saba|tekka|maguro|mongoika/i;
-const good = /vegetarisch|vegan|veggie|vegetaria|chay/i; // chay is vietnamese for vegetarian
-const vegan = /vegan/i;
+function highlight(elem, good, text) {
+    let reg = new RegExp(`[\\p{Letter}\\p{Pd}]*${text}[\\p{Letter}\\p{Pd}]*`, "gmiu");
+
+    findAndReplaceDOMText(elem, {
+        find: reg,
+        wrap: "span",
+        wrapClass: `highlight-${good ? "good" : "bad"}`
+    })
+}
+
+function highlightWords(elem) {
+    for (let match of elem.innerHTML.matchAll(bad)) {
+        highlight(elem, false, match[0]);
+    }
+
+    for (let match of elem.innerHTML.matchAll(good)) {
+        highlight(elem, true, match[0]);
+    };
+
+    for (let match of elem.innerHTML.matchAll(vegan)) {
+        highlight(elem, true, match[0]);
+    };
+}
 
 function hasVeggieOption(elem) {
     const without = /ohne|nicht|kein/i;
     let parsedOptions = elem.innerText.split(",");
-    
+
     for (let option of parsedOptions) {
         if (without.test(option)) {
             return true;
@@ -38,38 +61,58 @@ function prepareStyle() {
         box-shadow: inset 2rem 0px 0px 0px #7bc043;
         padding-left: 2rem;
      }
+     .highlight-good {
+        text-shadow: 0px 0px 5px rgb(0,255,0);
+     }
+     .highlight-bad {
+        text-shadow: 0px 0px 5px rgb(255,0,0);
+     }
     `;
 
     document.head.appendChild(styleTag);
 }
 
+function tagMeal(elem, classTag) {
+    elem.classList.add(classTag);
+    highlightWords(elem);
+}
+
 function tagMeals() {
     for (let c of document.getElementsByClassName("meal-container")) {
-        let mealName = c.getElementsByClassName("meal-name")[0]
-        let mealInfo = c.getElementsByClassName("meal__description-additional-info")[0];
-        
+        let mealName = c.getElementsByClassName("meal-name")[0];
+        let mealInfo = c.getElementsByClassName(
+            "meal__description-additional-info"
+        )[0];
+
         if (good.test(mealName.innerText) || vegan.test(mealName.innerText)) {
-            c.style.backgroundColor = "green";
+            tagMeal(c, "is-vegetarian");
             continue;
         }
 
-        if (bad.test(mealName.innerText) || (mealInfo && bad.test(mealInfo.innerText))) {
-            c.classList.add("is-meaty");
+        if (
+            bad.test(mealName.innerText) ||
+            (mealInfo && bad.test(mealInfo.innerText))
+        ) {
+            tagMeal(c, "is-meaty");
             continue;
         }
 
-        let mealOptions = c.getElementsByClassName("meal__description-choose-from")[0];
+        let mealOptions = c.getElementsByClassName(
+            "meal__description-choose-from"
+        )[0];
         if (mealOptions && !hasVeggieOption(mealOptions)) {
-            c.classList.add("is-meaty");
+            tagMeal(c, "is-meaty");
             continue;
         }
 
-        c.classList.add("is-vegetarian");
+        tagMeal(c, "is-vegetarian");
     }
 }
 
 function tagCategories() {
-    for (let category of document.getElementsByClassName("menucard__meals-group")) {
+    for (let category of document.getElementsByClassName(
+        "menucard__meals-group"
+    )) {
         let onlyMeatyMeals = true;
         for (let meal of category.getElementsByClassName("meal-container")) {
             if (meal.classList.contains("is-vegetarian")) {
@@ -87,7 +130,7 @@ function tagCategories() {
 
 function toggleMeaty(show) {
     for (let c of document.getElementsByClassName("is-meaty")) {
-        c.style.display = show && "none" || "block";
+        c.style.display = (show && "none") || "block";
     }
 }
 
@@ -111,6 +154,5 @@ try {
 
     initialHide();
 } catch (error) {
-    console.error(error)
+    console.error(error);
 }
-
