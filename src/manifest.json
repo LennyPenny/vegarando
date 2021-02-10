@@ -15,6 +15,7 @@
       "matches": ["*://*.lieferando.de/*"],
       "js": [
         "deps/browser-polyfill.min.js",
+        "deps/findAndReplaceDOMText.js",
         "vegarando.js"
       ]
     }
