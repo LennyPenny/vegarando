@@ -29,19 +29,19 @@ function highlightWords(elem) {
 }
 
 function hasVeggieOption(elem) {
-    const without = /ohne|nicht|kein/i;
+    const without = /ohne|nicht|kein/gi;
     let parsedOptions = elem.innerText.split(",");
 
     for (let option of parsedOptions) {
-        if (without.test(option)) {
+        if (option.match(without) !== null) {
             return true;
         }
 
-        if (good.test(option) || vegan.test(option)) {
+        if (option.match(good) !== null || option.match(vegan) !== null) {
             return true;
         }
-
-        if (!bad.test(option)) {
+m
+        if (option.match(bad) === null) {
             return true;
         }
     }
@@ -84,15 +84,19 @@ function tagMeals() {
             "meal__description-additional-info"
         )[0];
 
-        if (good.test(mealName.innerText) || vegan.test(mealName.innerText)) {
+        if (mealName === undefined) {
+            continue;
+        }
+
+        const mealNameText = mealName.innerText;
+        const mealInfoText = mealInfo ? mealInfo.innerText : '';
+
+        if (mealNameText.match(good) !== null || mealNameText.match(vegan) !== null) {
             tagMeal(c, "is-vegetarian");
             continue;
         }
 
-        if (
-            bad.test(mealName.innerText) ||
-            (mealInfo && bad.test(mealInfo.innerText))
-        ) {
+        if (mealNameText.match(bad) !== null || mealInfoText.match(bad) !== null) {
             tagMeal(c, "is-meaty");
             continue;
         }
