@@ -33,15 +33,15 @@ function hasVeggieOption(elem) {
     let parsedOptions = elem.innerText.split(",");
 
     for (let option of parsedOptions) {
-        if (without.test(option)) {
+        if (option.match(without)) {
             return true;
         }
 
-        if (good.test(option) || vegan.test(option)) {
+        if (option.match(good) || option.match(vegan)) {
             return true;
         }
 
-        if (!bad.test(option)) {
+        if (!option.match(bad)) {
             return true;
         }
     }
@@ -84,14 +84,14 @@ function tagMeals() {
             "meal__description-additional-info"
         )[0];
 
-        if (good.test(mealName.innerText) || vegan.test(mealName.innerText)) {
+        if (mealName.innerText.match(good) || mealName.innerText.match(vegan)) {
             tagMeal(c, "is-vegetarian");
             continue;
         }
 
         if (
-            bad.test(mealName.innerText) ||
-            (mealInfo && bad.test(mealInfo.innerText))
+            mealName.innerText.match(bad) ||
+            (mealInfo && mealInfo.innerText.match(bad))
         ) {
             tagMeal(c, "is-meaty");
             continue;
