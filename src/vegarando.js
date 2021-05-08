@@ -1,8 +1,37 @@
 "use strict";
 
-const bad = /aal|salami|bacon|sucuk|schinken|chicken|ente|bulette|fisch|garnele|meeresfr|leber|kalb|schwein|lachs|pastete|lamm|prosciutto|kapern|sardellen|gyros|Hähnchen|Hänchen|hühner|hühn|hünchen|huhn|Scampi|wurst|rind|beef|fleisch|krabben|hackfleisch|wurst|würstchen|schnitzel|steak|turkey|kebab|kebap|pute|speck|shrimps|scmpi|bolognese|ribs|rippchen|rogan josh|goshet|murgh|döner|frutti di mare|prosciutto|gehacktes|gehacktem|wiener art|burger|ebi|kani|surimi|sake|unagi|tako|masago|saba|tekka|maguro|mongoika/gim;
-const good = /vegetarisch|vegan|veggie|vegetaria|chay/gim; // chay is vietnamese for vegetarian
-const vegan = /vegan/gim;
+/**
+ * Search a given haystack string for an occurence of any of the keywords
+ * given in `needles` and return any matches
+ * @param {string} haystack
+ * @param {string[]} needles
+ * @return {string[]} List of matching keywords in original casing as present in haystack
+ */
+function getMatchingKeywords(haystack, needles) {
+    let matches = new Set();
+
+    const regex = new RegExp(needles.join("|"), "gim");
+
+    for (let match of haystack.matchAll(regex)) {
+        matches.add(match[0]);
+    }
+
+    return Array.from(matches);
+}
+
+/**
+ * Check if the haystack string contains any of the needles
+ * @param {string} haystack
+ * @param {string[]} needles
+ * @return {boolean}
+ */
+function hasMatchingKeyword(haystack, needles) {
+    let matches = new Set();
+
+    const regex = new RegExp(needles.join("|"), "gim");
+
+    return haystack.match(regex) !== null;
+}
 
 function highlight(elem, good, text) {
     let reg = new RegExp(`[\\p{Letter}\\p{Pd}]*${text}[\\p{Letter}\\p{Pd}]*`, "gmiu");
@@ -15,33 +44,32 @@ function highlight(elem, good, text) {
 }
 
 function highlightWords(elem) {
-    for (let match of elem.innerHTML.matchAll(bad)) {
-        highlight(elem, false, match[0]);
+    for (let match of getMatchingKeywords(elem.innerHTML, wordConfig.bad)) {
+        highlight(elem, false, match);
     }
 
-    for (let match of elem.innerHTML.matchAll(good)) {
-        highlight(elem, true, match[0]);
+    for (let match of getMatchingKeywords(elem.innerHTML, wordConfig.good)) {
+        highlight(elem, true, match);
     };
 
-    for (let match of elem.innerHTML.matchAll(vegan)) {
-        highlight(elem, true, match[0]);
+    for (let match of getMatchingKeywords(elem.innerHTML, wordConfig.vegan)) {
+        highlight(elem, true, match);
     };
 }
 
 function hasVeggieOption(elem) {
-    const without = /ohne|nicht|kein/i;
     let parsedOptions = elem.innerText.split(",");
 
     for (let option of parsedOptions) {
-        if (option.match(without)) {
+        if (hasMatchingKeyword(option, wordConfig.without)) {
             return true;
         }
 
-        if (option.match(good) || option.match(vegan)) {
+        if (hasMatchingKeyword(option, wordConfig.good) || hasMatchingKeyword(option, wordConfig.vegan)) {
             return true;
         }
 
-        if (!option.match(bad)) {
+        if (!hasMatchingKeyword(option, wordConfig.bad)) {
             return true;
         }
     }
@@ -84,14 +112,14 @@ function tagMeals() {
             "meal__description-additional-info"
         )[0];
 
-        if (mealName.innerText.match(good) || mealName.innerText.match(vegan)) {
+        if (hasMatchingKeyword(mealName.innerText, wordConfig.good) || hasMatchingKeyword(mealName.innerText, wordConfig.vegan)) {
             tagMeal(c, "is-vegetarian");
             continue;
         }
 
         if (
-            mealName.innerText.match(bad) ||
-            (mealInfo && mealInfo.innerText.match(bad))
+            hasMatchingKeyword(mealName.innerText, wordConfig.bad) ||
+            (mealInfo && hasMatchingKeyword(mealInfo.innerText, wordConfig.bad))
         ) {
             tagMeal(c, "is-meaty");
             continue;
