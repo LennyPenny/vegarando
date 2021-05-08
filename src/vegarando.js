@@ -146,7 +146,7 @@ function tagCategories() {
             }
         }
 
-        if (onlyMeatyMeals == false) {
+        if (onlyMeatyMeals === false) {
             continue;
         }
 
@@ -161,7 +161,7 @@ function toggleMeaty(show) {
 }
 
 browser.storage.onChanged.addListener(async (changes, area) => {
-    if (area != "sync") {
+    if (area !== "sync") {
         return;
     }
 
