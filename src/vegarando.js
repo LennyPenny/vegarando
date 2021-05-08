@@ -26,8 +26,6 @@ function getMatchingKeywords(haystack, needles) {
  * @return {boolean}
  */
 function hasMatchingKeyword(haystack, needles) {
-    let matches = new Set();
-
     const regex = new RegExp(needles.join("|"), "gim");
 
     return haystack.match(regex) !== null;
