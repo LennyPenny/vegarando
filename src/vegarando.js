@@ -48,11 +48,11 @@ function highlightWords(elem) {
 
     for (let match of getMatchingKeywords(elem.innerHTML, wordConfig.good)) {
         highlight(elem, true, match);
-    };
+    }
 
     for (let match of getMatchingKeywords(elem.innerHTML, wordConfig.vegan)) {
         highlight(elem, true, match);
-    };
+    }
 }
 
 function hasVeggieOption(elem) {
