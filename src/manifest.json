@@ -16,6 +16,7 @@
       "js": [
         "deps/browser-polyfill.min.js",
         "deps/findAndReplaceDOMText.js",
+        "config/words.js",
         "vegarando.js"
       ]
     }
