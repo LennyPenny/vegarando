@@ -1,6 +1,6 @@
 "use strict";
 
-const bad = /aal|salami|bacon|sucuk|schinken|chicken|ente|bulette|fisch|garnele|meeresfr|leber|kalb|schwein|lachs|pastete|lamm|prosciutto|kapern|sardellen|gyros|Hähnchen|Hänchen|hühner|hühn|hünchen|huhn|Scampi|wurst|rind|beef|fleisch|krabben|hackfleisch|wurst|würstchen|schnitzel|steak|turkey|kebab|kebap|pute|speck|shrimps|scmpi|bolognese|ribs|rippchen|rogan josh|goshet|murgh|döner|frutti di mare|prosciutto|gehacktes|gehacktem|wiener art|burger|ebi|kani|surimi|sake|unagi|tako|masago|saba|tekka|maguro|mongoika/gim;
+const bad = /aal|salami|bacon|sucuk|schinken|chicken|ente|bulette|fisch|garnele|meeresfr|leber|kalb|schwein|lachs|pastete|lamm|prosciutto|kapern|sardellen|gyros|Hähnchen|Hänchen|hühner|hühn|hünchen|huhn|Scampi|wurst|rind|beef|fleisch|krabben|hackfleisch|wurst|würstchen|schnitzel|steak|turkey|kebab|kebap|pute|speck|shrimps|scmpi|bolognese|ribs|rippchen|rogan josh|goshet|murgh|döner|frutti di mare|prosciutto|gehacktes|gehacktem|wiener art|burger|ebi|kani|surimi|sake|unagi|tako|masago|saba|tekka|maguro|mongoika|pork/gim;
 const good = /vegetarisch|vegan|veggie|vegetaria|chay/gim; // chay is vietnamese for vegetarian
 const vegan = /vegan/gim;
 
