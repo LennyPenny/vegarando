@@ -1,16 +1,14 @@
 "use strict";
 
 /**
- * Search a given haystack string for an occurence of any of the keywords
- * given in `needles` and return any matches
+ * Search a given haystack string for and matches for a given regular expression.
+ * All matches will be output in an array of strings and are guaranteed to be unique.
  * @param {string} haystack
- * @param {string[]} needles
+ * @param {RegExp} regex
  * @return {string[]} List of matching keywords in original casing as present in haystack
  */
-function getMatchingKeywords(haystack, needles) {
+function getMatchingKeywords(haystack, regex) {
     let matches = new Set();
-
-    const regex = new RegExp(needles.join("|"), "gim");
 
     for (let match of haystack.matchAll(regex)) {
         matches.add(match[0]);
@@ -20,14 +18,12 @@ function getMatchingKeywords(haystack, needles) {
 }
 
 /**
- * Check if the haystack string contains any of the needles
+ * Check if the haystack string matches the given regular expression.
  * @param {string} haystack
- * @param {string[]} needles
+ * @param {RegExp} regex
  * @return {boolean}
  */
-function hasMatchingKeyword(haystack, needles) {
-    const regex = new RegExp(needles.join("|"), "gim");
-
+function hasMatchingKeyword(haystack, regex) {
     return haystack.match(regex) !== null;
 }
 

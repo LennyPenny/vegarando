@@ -86,3 +86,10 @@ var wordConfig = {
         "kein"
     ]
 }
+
+var wordConfigRegex = {
+    "bad": new RegExp(wordConfig.bad.join("|"), "gim"),
+    "good": new RegExp(wordConfig.good.join("|"), "gim"),
+    "vegan": new RegExp(wordConfig.vegan.join("|"), "gim"),
+    "without": new RegExp(wordConfig.without.join("|"), "gim")
+}
