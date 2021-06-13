@@ -38,15 +38,15 @@ function highlight(elem, good, text) {
 }
 
 function highlightWords(elem) {
-    for (let match of getMatchingKeywords(elem.innerHTML, wordConfig.bad)) {
+    for (let match of getMatchingKeywords(elem.innerHTML, wordConfigRegex.bad)) {
         highlight(elem, false, match);
     }
 
-    for (let match of getMatchingKeywords(elem.innerHTML, wordConfig.good)) {
+    for (let match of getMatchingKeywords(elem.innerHTML, wordConfigRegex.good)) {
         highlight(elem, true, match);
     }
 
-    for (let match of getMatchingKeywords(elem.innerHTML, wordConfig.vegan)) {
+    for (let match of getMatchingKeywords(elem.innerHTML, wordConfigRegex.vegan)) {
         highlight(elem, true, match);
     }
 }
@@ -55,15 +55,15 @@ function hasVeggieOption(elem) {
     let parsedOptions = elem.innerText.split(",");
 
     for (let option of parsedOptions) {
-        if (hasMatchingKeyword(option, wordConfig.without)) {
+        if (hasMatchingKeyword(option, wordConfigRegex.without)) {
             return true;
         }
 
-        if (hasMatchingKeyword(option, wordConfig.good) || hasMatchingKeyword(option, wordConfig.vegan)) {
+        if (hasMatchingKeyword(option, wordConfigRegex.good) || hasMatchingKeyword(option, wordConfigRegex.vegan)) {
             return true;
         }
 
-        if (!hasMatchingKeyword(option, wordConfig.bad)) {
+        if (!hasMatchingKeyword(option, wordConfigRegex.bad)) {
             return true;
         }
     }
@@ -106,14 +106,14 @@ function tagMeals() {
             "meal__description-additional-info"
         )[0];
 
-        if (hasMatchingKeyword(mealName.innerText, wordConfig.good) || hasMatchingKeyword(mealName.innerText, wordConfig.vegan)) {
+        if (hasMatchingKeyword(mealName.innerText, wordConfigRegex.good) || hasMatchingKeyword(mealName.innerText, wordConfigRegex.vegan)) {
             tagMeal(c, "is-vegetarian");
             continue;
         }
 
         if (
-            hasMatchingKeyword(mealName.innerText, wordConfig.bad) ||
-            (mealInfo && hasMatchingKeyword(mealInfo.innerText, wordConfig.bad))
+            hasMatchingKeyword(mealName.innerText, wordConfigRegex.bad) ||
+            (mealInfo && hasMatchingKeyword(mealInfo.innerText, wordConfigRegex.bad))
         ) {
             tagMeal(c, "is-meaty");
             continue;
