@@ -1,8 +1,31 @@
 "use strict";
 
-const bad = /aal|salami|bacon|sucuk|schinken|chicken|ente|bulette|fisch|garnele|meeresfr|leber|kalb|schwein|lachs|pastete|lamm|prosciutto|kapern|sardellen|gyros|Hähnchen|Hänchen|hühner|hühn|hünchen|huhn|Scampi|wurst|rind|beef|fleisch|krabben|hackfleisch|wurst|würstchen|schnitzel|steak|turkey|kebab|kebap|pute|speck|shrimps|scmpi|bolognese|ribs|rippchen|rogan josh|goshet|murgh|döner|frutti di mare|prosciutto|gehacktes|gehacktem|wiener art|burger|ebi|kani|surimi|sake|unagi|tako|masago|saba|tekka|maguro|mongoika|pork/gim;
-const good = /vegetarisch|vegan|veggie|vegetaria|chay/gim; // chay is vietnamese for vegetarian
-const vegan = /vegan/gim;
+/**
+ * Search a given haystack string for and matches for a given regular expression.
+ * All matches will be output in an array of strings and are guaranteed to be unique.
+ * @param {string} haystack
+ * @param {RegExp} regex
+ * @return {string[]} List of matching keywords in original casing as present in haystack
+ */
+function getMatchingKeywords(haystack, regex) {
+    let matches = new Set();
+
+    for (let match of haystack.matchAll(regex)) {
+        matches.add(match[0]);
+    }
+
+    return Array.from(matches);
+}
+
+/**
+ * Check if the haystack string matches the given regular expression.
+ * @param {string} haystack
+ * @param {RegExp} regex
+ * @return {boolean}
+ */
+function hasMatchingKeyword(haystack, regex) {
+    return haystack.match(regex) !== null;
+}
 
 function highlight(elem, good, text) {
     let reg = new RegExp(`[\\p{Letter}\\p{Pd}]*${text}[\\p{Letter}\\p{Pd}]*`, "gmiu");
@@ -15,33 +38,32 @@ function highlight(elem, good, text) {
 }
 
 function highlightWords(elem) {
-    for (let match of elem.innerHTML.matchAll(bad)) {
-        highlight(elem, false, match[0]);
+    for (let match of getMatchingKeywords(elem.innerHTML, wordConfigRegex.bad)) {
+        highlight(elem, false, match);
     }
 
-    for (let match of elem.innerHTML.matchAll(good)) {
-        highlight(elem, true, match[0]);
-    };
+    for (let match of getMatchingKeywords(elem.innerHTML, wordConfigRegex.good)) {
+        highlight(elem, true, match);
+    }
 
-    for (let match of elem.innerHTML.matchAll(vegan)) {
-        highlight(elem, true, match[0]);
-    };
+    for (let match of getMatchingKeywords(elem.innerHTML, wordConfigRegex.vegan)) {
+        highlight(elem, true, match);
+    }
 }
 
 function hasVeggieOption(elem) {
-    const without = /ohne|nicht|kein/i;
     let parsedOptions = elem.innerText.split(",");
 
     for (let option of parsedOptions) {
-        if (option.match(without)) {
+        if (hasMatchingKeyword(option, wordConfigRegex.without)) {
             return true;
         }
 
-        if (option.match(good) || option.match(vegan)) {
+        if (hasMatchingKeyword(option, wordConfigRegex.good) || hasMatchingKeyword(option, wordConfigRegex.vegan)) {
             return true;
         }
 
-        if (!option.match(bad)) {
+        if (!hasMatchingKeyword(option, wordConfigRegex.bad)) {
             return true;
         }
     }
@@ -84,14 +106,14 @@ function tagMeals() {
             "meal__description-additional-info"
         )[0];
 
-        if (mealName.innerText.match(good) || mealName.innerText.match(vegan)) {
+        if (hasMatchingKeyword(mealName.innerText, wordConfigRegex.good) || hasMatchingKeyword(mealName.innerText, wordConfigRegex.vegan)) {
             tagMeal(c, "is-vegetarian");
             continue;
         }
 
         if (
-            mealName.innerText.match(bad) ||
-            (mealInfo && mealInfo.innerText.match(bad))
+            hasMatchingKeyword(mealName.innerText, wordConfigRegex.bad) ||
+            (mealInfo && hasMatchingKeyword(mealInfo.innerText, wordConfigRegex.bad))
         ) {
             tagMeal(c, "is-meaty");
             continue;
@@ -120,7 +142,7 @@ function tagCategories() {
             }
         }
 
-        if (onlyMeatyMeals == false) {
+        if (onlyMeatyMeals === false) {
             continue;
         }
 
@@ -135,7 +157,7 @@ function toggleMeaty(show) {
 }
 
 browser.storage.onChanged.addListener(async (changes, area) => {
-    if (area != "sync") {
+    if (area !== "sync") {
         return;
     }
 
