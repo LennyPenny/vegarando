@@ -68,7 +68,8 @@ var wordConfig = {
         "saba",
         "tekka",
         "maguro",
-        "mongoika"
+        "mongoika",
+        "pork"
     ],
     "good": [
         "vegetarisch",
