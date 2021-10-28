@@ -22,6 +22,8 @@ var wordConfig = {
         "sardellen",
         "gyros",
         "Hähnchen",
+        "Hähnchenbrust",
+        "Hähnchenbrustfilet",
         "Hänchen",
         "hühner",
         "hühn",
