@@ -42,13 +42,12 @@ jobs:
           dest: vegarando.zip
 
       - name: "Chrome: Upload & release"
-        uses: mnao305/chrome-extension-upload@1.1.1
+        uses: mnao305/chrome-extension-upload@2.1.0
         continue-on-error: true
         with:
           file-path: vegarando.zip
           extension-id: pbcekclobcikjpjfppoodgjbiieckeik
           client-id: ${{ secrets.CHROME_CLIENT_ID }}
-          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
           refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
       - name: "Firefox: web-ext build"
         id: web-ext-build
