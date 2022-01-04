@@ -251,7 +251,6 @@ const observeMarkupChanges = () => {
         for(const mutation of mutationsList) {
             if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
                 for (const node of mutation.addedNodes) {
-                    console.log('node', node, 'tageName', node.tagName);
                     if (node.tagName === "SECTION") {
                         tagMeals();
                         tagCategories();
