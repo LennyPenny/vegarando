@@ -77,11 +77,13 @@ function prepareStyle() {
     const styleTag = document.createElement("style");
 
     styleTag.innerText = `
-     .is-vegetarian > div {
+     .is-vegetarian .meal,
+     .is-vegetarian [data-qa="item"] {
         box-shadow: inset 0.5rem 0px 0px 0px #7bc043;
         transition: all 0.5s;
      }
-     .is-vegetarian > div:hover {
+     .is-vegetarian .meal:hover,
+     .is-vegetarian [data-qa="item"]:hover {
         box-shadow: inset 2rem 0px 0px 0px #7bc043;
         padding-left: 2rem;
      }
