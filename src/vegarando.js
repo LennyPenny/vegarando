@@ -51,10 +51,12 @@ function highlightWords(elem) {
     }
 }
 
-function hasVeggieOption(elem) {
-    let parsedOptions = elem.innerText.split(",");
+function hasVeggieOption(options) {
+    if (options.length === 0) {
+        return true;
+    }
 
-    for (let option of parsedOptions) {
+    for (let option of options) {
         if (hasMatchingKeyword(option, wordConfigRegex.without)) {
             return true;
         }
@@ -75,11 +77,13 @@ function prepareStyle() {
     const styleTag = document.createElement("style");
 
     styleTag.innerText = `
-     .is-vegetarian .meal {
+     .is-vegetarian .meal,
+     .is-vegetarian [data-qa="item"] {
         box-shadow: inset 0.5rem 0px 0px 0px #7bc043;
         transition: all 0.5s;
      }
-     .is-vegetarian .meal:hover {
+     .is-vegetarian .meal:hover,
+     .is-vegetarian [data-qa="item"]:hover {
         box-shadow: inset 2rem 0px 0px 0px #7bc043;
         padding-left: 2rem;
      }
@@ -99,44 +103,117 @@ function tagMeal(elem, classTag) {
     highlightWords(elem);
 }
 
+const getTextOfElementWithoutChildren = (element) => {
+    return []
+        .filter
+        .call(element.childNodes, e => e.nodeType === Node.TEXT_NODE)
+        .map(e => e.textContent)
+        .join('');
+}
+
+const isOldMarkup = () => {
+    return document.getElementById('root') === null;
+}
+
+const getCategories = () => {
+    if (oldMarkup === true) {
+        return document.querySelectorAll(".menucard__meals-group");
+    }
+
+    return document.querySelectorAll("[data-qa='menu-list'] section");
+}
+
+const getProductItems = (element) => {
+    if (oldMarkup === true) {
+        return element.querySelectorAll(".meal-container");
+    }
+
+    return element.querySelectorAll("[menu-item-id]");
+}
+
+const getProductName = (item) => {
+    let nameItem = item.querySelector("h3");
+
+    if (oldMarkup === true) {
+        nameItem = item.querySelector("[data-product-name]");
+    }
+
+    if (nameItem === null) {
+        return "";
+    }
+
+    return getTextOfElementWithoutChildren(nameItem);
+}
+
+const getProductInfo = (item) => {
+    let infoItem = item.querySelector("[data-qa='util']:nth-child(2)");
+
+    if (oldMarkup === true) {
+        infoItem = item.querySelector(".meal__description-additional-info");
+    }
+
+    if (infoItem === null) {
+        return "";
+    }
+
+    return infoItem.innerText;
+}
+
+const getProductOptions = (item) => {
+    let optionsItem = item.querySelector("[data-qa='util']:nth-child(3)");
+
+    if (oldMarkup === true) {
+        optionsItem = item.querySelector(".meal__description-choose-from");
+    }
+
+    if (optionsItem === null) {
+        return [];
+    }
+
+    return optionsItem.innerText.split(",");
+}
+
 function tagMeals() {
-    for (let c of document.getElementsByClassName("meal-container")) {
-        let mealName = c.getElementsByClassName("meal-name")[0];
-        let mealInfo = c.getElementsByClassName(
-            "meal__description-additional-info"
-        )[0];
+    const productItems = getProductItems(document);
 
-        if (hasMatchingKeyword(mealName.innerText, wordConfigRegex.good) || hasMatchingKeyword(mealName.innerText, wordConfigRegex.vegan)) {
-            tagMeal(c, "is-vegetarian");
+    for (let item of productItems) {
+        if (item.classList.contains("is-vegetarian") || item.classList.contains("is-meaty")) {
             continue;
         }
 
-        if (
-            hasMatchingKeyword(mealName.innerText, wordConfigRegex.bad) ||
-            (mealInfo && hasMatchingKeyword(mealInfo.innerText, wordConfigRegex.bad))
-        ) {
-            tagMeal(c, "is-meaty");
+        const name = getProductName(item);
+        const productInfo = getProductInfo(item);
+        const options = getProductOptions(item);
+
+        if (hasMatchingKeyword(name, wordConfigRegex.good) || hasMatchingKeyword(name, wordConfigRegex.vegan)) {
+            tagMeal(item, "is-vegetarian");
             continue;
         }
 
-        let mealOptions = c.getElementsByClassName(
-            "meal__description-choose-from"
-        )[0];
-        if (mealOptions && !hasVeggieOption(mealOptions)) {
-            tagMeal(c, "is-meaty");
+        if (hasMatchingKeyword(name, wordConfigRegex.bad) || hasMatchingKeyword(productInfo, wordConfigRegex.bad)) {
+            tagMeal(item, "is-meaty");
             continue;
         }
 
-        tagMeal(c, "is-vegetarian");
+        if (!hasVeggieOption(options)) {
+            tagMeal(item, "is-meaty");
+            continue;
+        }
+
+        tagMeal(item, "is-vegetarian");
     }
 }
 
 function tagCategories() {
-    for (let category of document.getElementsByClassName(
-        "menucard__meals-group"
-    )) {
+    const categories = getCategories();
+
+    for (let category of categories) {
+        if (category.classList.contains("is-vegetarian")) {
+            continue;
+        }
+
         let onlyMeatyMeals = true;
-        for (let meal of category.getElementsByClassName("meal-container")) {
+        for (let meal of getProductItems(category)) {
             if (meal.classList.contains("is-vegetarian")) {
                 onlyMeatyMeals = false;
             }
@@ -168,8 +245,32 @@ async function initialHide() {
     toggleMeaty((await browser.storage.sync.get())["hideMeaty"]);
 }
 
+const observeMarkupChanges = () => {
+    const targetNode = document.querySelector('body');
+    const config = { attributes: false, childList: true, subtree: true };
+
+    const callback = function(mutationsList) {
+        for(const mutation of mutationsList) {
+            if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+                for (const node of mutation.addedNodes) {
+                    if (node.tagName === "SECTION") {
+                        tagMeals();
+                        tagCategories();
+                    }
+                }
+            }
+        }
+    };
+
+    const observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+}
+
+const oldMarkup = isOldMarkup();
+
 // firefox at least silently failed on addon errors, so we have to explicitly catch q.q
 try {
+    observeMarkupChanges();
     prepareStyle();
     tagMeals();
     tagCategories();
