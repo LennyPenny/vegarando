@@ -33,7 +33,8 @@ function highlight(elem, good, text) {
     findAndReplaceDOMText(elem, {
         find: reg,
         wrap: "span",
-        wrapClass: `highlight-${good ? "good" : "bad"}`
+        wrapClass: `highlight-${good ? "good" : "bad"}`,
+        forceContext: true
     })
 }
 
