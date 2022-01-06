@@ -39,7 +39,7 @@ var wordConfig = {
         "wurst",
         "würstchen",
         "schnitzel",
-        "steak",
+        "steak(?!pfeffer)",
         "turkey",
         "kebab",
         "kebap",
