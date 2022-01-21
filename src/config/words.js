@@ -75,6 +75,7 @@ var wordConfig = {
         "pork",
         "salsiccia",
         "wings",
+        "pastrami",
     ],
     "good": [
         "vegetarisch",
