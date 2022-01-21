@@ -6,7 +6,7 @@ var wordConfig = {
         "sucuk",
         "schinken",
         "chicken",
-        "ente",
+        "(?<!mom)ente",
         "bulette",
         "fisch",
         "tuna",
