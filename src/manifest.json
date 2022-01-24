@@ -12,7 +12,7 @@
   "permissions": ["storage"],
   "content_scripts": [
     {
-      "matches": ["*://*.lieferando.de/*"],
+      "matches": ["*://*.lieferando.de/*", "*://*.lieferando.at/*"],
       "js": [
         "deps/browser-polyfill.min.js",
         "deps/findAndReplaceDOMText.js",
@@ -25,7 +25,7 @@
     "default_icon": "icon-48.png",
     "default_title": "Vegarando",
     "default_popup": "popup/vegarando.html",
-    "show_matches": ["*://*.lieferando.de/*"]
+    "show_matches": ["*://*.lieferando.de/*", "*://*.lieferando.at/*"]
   },
   "browser_specific_settings": {
     "gecko": {
