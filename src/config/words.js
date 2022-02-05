@@ -76,13 +76,17 @@ var wordConfig = {
         "salsiccia",
         "wings",
         "pastrami",
+        "gans",
+        "hot dog",
+        "hotdog",
     ],
     "good": [
         "vegetarisch",
         "vegan",
         "veggie",
         "vegetaria",
-        "chay"
+        "chay",
+        "beyond meat",
     ],
     "vegan": [
         "vegan"
